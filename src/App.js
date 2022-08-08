@@ -12,17 +12,23 @@ class App extends Component {
       products: data.products,
       size: "",
       sort: "",
-      cartItems: []
+      cartItems: JSON.parse(localStorage.getItem("cartItems")) || []
     }
 
+  }
+
+  createOrder = (order) => {
+    alert("Need to save order for " + order.name)
   }
 
   removeFromCart = (product) => {
     //make a clone of the current cartItems array in the app State
     const cartItems = this.state.cartItems.slice()
 
-    this.setState({ cartItems: cartItems.filter(x => x._id !== product._id) })
+    const modifiedCartItems = cartItems.filter(x => x._id !== product._id)
 
+    this.setState({ cartItems: modifiedCartItems })
+    localStorage.setItem("cartItems", JSON.stringify(modifiedCartItems))
 
   }
 
@@ -42,6 +48,8 @@ class App extends Component {
       cartItems.push({ ...product, count: 1 })
     }
     this.setState({ cartItems })
+
+    localStorage.setItem("cartItems", JSON.stringify(cartItems))
 
   }
 
@@ -104,6 +112,7 @@ class App extends Component {
               <Cart
                 cartItems={this.state.cartItems}
                 removeFromCart={this.removeFromCart}
+                createOrder={this.createOrder}
               />
             </div>
           </div>
