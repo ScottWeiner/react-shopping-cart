@@ -9,6 +9,8 @@ export const productsReducer = (state = {}, action) => {
 
         case SORT_PRODUCTS_BY_PRICE:
             return { ...state, filteredItems: action.payload.items, sort: action.payload.sort }
+
+
         default:
             return state
     }
