@@ -41,3 +41,5 @@ export const sortProductsByPrice = (products, sortDirection) => (dispatch) => {
         }
     })
 }
+
+
