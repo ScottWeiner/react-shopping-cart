@@ -1,15 +1,17 @@
 //feature 1 - example
 import React, { Component } from 'react'
-import data from "./data.json"
+
 import Products from './components/Products'
 import Filter from './components/Filter'
 import Cart from './components/Cart'
+import store from './store/store'
+import { Provider } from 'react-redux'
 
 class App extends Component {
   constructor() {
     super()
     this.state = {
-      products: data.products,
+      products: [],
       size: "",
       sort: "",
       cartItems: JSON.parse(localStorage.getItem("cartItems")) || []
@@ -53,72 +55,40 @@ class App extends Component {
 
   }
 
-  filterProducts = (event) => {
-    console.log(event.target.value)
 
-    if (event.target.value === '') {
-      this.setState({
-        size: event.target.value,
-        products: data.products
-      })
-    } else {
-      this.setState({
-        size: event.target.value,
-        products: data.products.filter(x => x.availableSizes.indexOf(event.target.value) >= 0)
-      })
-    }
-
-  }
-
-  sortProducts = (event) => {
-    const sort = event.target.value
-    console.log('sort: ', sort)
-    this.setState(state => ({
-      sort: sort,
-      products: this.state.products.slice().sort((a, b) => (
-        sort === "lowest" ?
-          ((a.price > b.price) ? 1 : -1) :
-          sort === "highest" ?
-            ((a.price < b.price) ? 1 : -1) :
-            ((a._id < b._id) ? 1 : -1)
-      ))
-    }))
-
-  }
 
   render() {
     return (
-      <div className="grid-container">
-        <header>
-          <a href="/">React Shopping Cart</a>
-        </header>
-        <main>
-          <div className="content">
-            <div className="main">
-              <Filter
-                count={this.state.products.length}
-                size={this.state.size}
-                sort={this.state.sort}
-                filterProducts={this.filterProducts}
-                sortProducts={this.sortProducts}
+      <Provider store={store}>
+        <div className="grid-container">
+          <header>
+            <a href="/">React Shopping Cart</a>
+          </header>
+          <main>
+            <div className="content">
+              <div className="main">
+                <Filter
 
-              />
-              <Products
-                products={this.state.products}
-                addToCart={this.addToCart}
-              />
+
+                />
+                <Products
+
+                  addToCart={this.addToCart}
+                />
+              </div>
+              <div className="sidebar">
+                <Cart
+                  cartItems={this.state.cartItems}
+                  removeFromCart={this.removeFromCart}
+                  createOrder={this.createOrder}
+                />
+              </div>
             </div>
-            <div className="sidebar">
-              <Cart
-                cartItems={this.state.cartItems}
-                removeFromCart={this.removeFromCart}
-                createOrder={this.createOrder}
-              />
-            </div>
-          </div>
-        </main>
-        <footer>Some rights reserved, but not all.</footer>
-      </div>
+          </main>
+          <footer>Some rights reserved, but not all.</footer>
+        </div>
+      </Provider>
+
     );
   }
 }

@@ -23,7 +23,7 @@ const Product = mongoose.model("products", new mongoose.Schema({
 }))
 
 app.get("/api/products", async (req, res) => {
-
+    console.log("get products request: ", req)
     const products = await Product.find({})
     res.send(products)
 })
@@ -40,5 +40,5 @@ app.delete("/api/products/:id", async (req, res) => {
     res.send(deletedProduct)
 })
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3001
 app.listen(port, () => console.log("listening on port" + port))
