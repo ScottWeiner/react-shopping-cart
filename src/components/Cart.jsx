@@ -3,6 +3,9 @@ import formatCurrency from '../utilities/utilities'
 import Fade from 'react-reveal/Fade'
 import { connect } from 'react-redux'
 import { removeProductFromCart } from '../store/actions/cartActions'
+import { createOrder, clearOrder } from '../store/actions/orderActions'
+import Modal from 'react-modal/lib/components/Modal'
+import Zoom from 'react-reveal/Zoom'
 
 class Cart extends Component {
 
@@ -27,14 +30,23 @@ class Cart extends Component {
             name: this.state.name,
             email: this.state.email,
             address: this.state.address,
-            cartItems: this.props.cartItems
+            cartItems: this.props.cartItems,
+            total: this.props.cartItems.reduce((a, c) => a + (c.price * c.count), 0)
         }
         this.props.createOrder(order)
     }
 
+    closeModal = () => {
+        this.props.clearOrder()
+    }
+
+    formatDate = (date) => {
+        return new Date(date).toLocaleString('en-US')
+    }
+
     render() {
 
-        const { cartItems } = this.props
+        const { cartItems, order } = this.props
 
         return (
             <>
@@ -47,6 +59,50 @@ class Cart extends Component {
                             </div>
                     }
                 </div>
+                {
+                    order && (
+                        <Modal isOpen={true} onRequestClose={this.closeModal}>
+                            <Zoom>
+                                <button className="close-modal" onClick={this.closeModal}>x</button>
+                                <div className="order-details">
+                                    <h3 className='success-message'>Your order has been placed!</h3>
+                                    <h2>Order {order._id}</h2>
+                                    <ul>
+                                        <li>
+                                            <div>Name:</div>
+                                            <div>{order.name}</div>
+                                        </li>
+                                        <li>
+                                            <div>Address:</div>
+                                            <div>{order.address}</div>
+                                        </li>
+                                        <li>
+                                            <div>Email:</div>
+                                            <div>{order.email}</div>
+                                        </li>
+                                        <li>
+                                            <div>Date:</div>
+                                            <div>{this.formatDate(order.createdAt)}</div>
+                                        </li>
+                                        <li>
+                                            <div>Cart Items:</div>
+                                            <div>{order.cartItems.map(item => (
+                                                <div>
+
+                                                    {item.count} x {item.title}
+                                                </div>
+                                            ))}</div>
+                                        </li>
+                                        <li>
+                                            <div>Total:</div>
+                                            <div>{formatCurrency(order.total)}</div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </Zoom>
+                        </Modal>
+                    )
+                }
                 <div>
                     <div className="cart">
                         <Fade left cascade>
@@ -114,8 +170,12 @@ class Cart extends Component {
 
 
 export default connect(
-    (state) => ({ cartItems: state.cart.cartItems })
+    (state) => ({
+        cartItems: state.cart.cartItems,
+        order: state.order.order
+    })
     , {
-        removeProductFromCart
-
+        removeProductFromCart,
+        createOrder,
+        clearOrder
     })(Cart)
