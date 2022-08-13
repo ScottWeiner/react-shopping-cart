@@ -4,6 +4,7 @@ const mongoose = require('mongoose')
 const shortid = require('shortid')
 require('dotenv').config()
 
+//work damn you!
 
 const app = express()
 app.use(bodyParser.json())
