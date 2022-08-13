@@ -10,6 +10,9 @@ require('dotenv').config()
 const app = express()
 app.use(bodyParser.json())
 
+app.use("/", express.static(__dirname + "/build"))
+app.get("/", (req, res) => res.sendFile(__dirname + "build/index.html"))
+
 const mongoURL = process.env.MONGODB_URL
 
 mongoose.connect(mongoURL, {
