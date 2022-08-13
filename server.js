@@ -2,12 +2,15 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const shortid = require('shortid')
+require('dotenv').config()
 
 
 const app = express()
 app.use(bodyParser.json())
 
-mongoose.connect("mongodb+srv://admin:passwordpassword@cluster0.7xkqi.mongodb.net/ReactShoppingCartDB?retryWrites=true&w=majority", {
+const mongoURL = process.env.MONGODB_URL
+
+mongoose.connect(mongoURL, {
     //useNewUrlParser: true,
     //useCreateIndex: true,
     //useUnifiedTopology: true
