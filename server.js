@@ -79,5 +79,15 @@ app.post('/api/orders', async (req, res) => {
     res.send(savedOrder)
 })
 
+app.get('/api/orders', async (req, res) => {
+    const orders = await Order.find({})
+    res.send(orders)
+})
+
+app.delete('/api/order/:id', async (req, res) => {
+    const order = await Order.findByIdAndDelete(req.params.id)
+    res.send(order)
+})
+
 const port = process.env.PORT || 3001
 app.listen(port, () => console.log("listening on port " + port))
