@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const shortid = require('shortid')
+
 require('dotenv').config()
 
 //work damn you!
